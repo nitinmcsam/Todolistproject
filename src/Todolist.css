@@ -1,0 +1,11 @@
+* {
+}
+.Todolist-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.remove-button{
+    padding: 6px 9px;
+    margin: 2px 33px;
+}
