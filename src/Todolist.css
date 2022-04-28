@@ -1,11 +1,73 @@
-* {
+.Todolist-main{
+  width: 100%;
+  height: 100%;
+  
 }
-.Todolist-item {
+.Todoapp-heading{
+
+}
+.inputbox-addbutton{
+  margin: 24px 8px;
+padding-left: 8px;
+}
+inputbox-addbutton{
+  padding: 10px;
+}
+
+.todolist-inputbox{
+width: 18rem;
+height: 33px;
+}
+.taskAddbButton{
+  display: inline-block;
+outline: 0;
+border: 0;
+cursor: pointer;
+background-color: white;
+border-radius: 4px;
+padding: 8px 16px;
+font-size: 16px;
+font-weight: 600;
+color: rgb(43, 108, 176);
+border: 1px solid rgb(66, 153, 225);
+line-height: 21.8px;
+margin: 2px 5px;
+}
+.Todolist-items-Show{
+  width: 90%;
+min-height: 20rem;
+max-height: 50rem;
+
+border: 2px solid transparent;
+display: flex;
+/* align-items: center; */
+justify-content: center;
+}
+.Todolist-items-Show ol li {
+   list-style: none;
+display: flex;
+align-items: center;
+}
+
+.cards{
+  border: 2px solid green;
+  width: 30rem;
+  height: 3rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: row;
+  align-items: baseline;
+  align-content: space-between;
+  justify-content: flex-start;
 }
-.remove-button{
-    padding: 6px 9px;
-    margin: 2px 33px;
+.titlepera{
+  border: 1px solid tr;
+  height: 2rem;
+  width: 23rem;
+}
+
+.titleDiv{
+
+}
+.removeEditButton{
+
 }

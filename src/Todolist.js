@@ -1,62 +1,145 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Todolist.css";
 
 function Todolist() {
+  
+  const inputRef = React.useRef(null);
+  const[editIndex,setEditIndex]=useState(0)
+  const[count,setCount]=useState(1)
   const [Todolistitem, setTodolistitem] = useState([]);
-  const [inputvalue, setinputvalue] = useState();
+  const [updateTitle,setUpdateTitle]=useState("")
+  const [getData,setGetData]=useState([])
+  const [inputvalue, setinputvalue] = useState({ 
+      title:"",
+      isEdit:false,
+      taskComplete:false,}
+      );
+      
+      useEffect(()=>{
+        
+         if(Todolistitem[editIndex]){
+       if(Todolistitem[editIndex].isEdit==true){
+        
+         setCount(count+1)
+         console.log(count)
+       }
+       }
+       
+      },[Todolistitem])
 
+      useEffect( ()=>{
+       async function fetchApi(){
+         let url = 'https://mocki.io/v1/38a904ec-6754-4052-b396-6466f0b249b0'
+         let respones=await fetch(url)
+         let datafine=await respones.json()
+         setGetData(datafine.data)
+         
+       }
 
-  const Handletaddtask = () => {
+       fetchApi()
+       console.log(getData)
+      },[getData])
+
+  const handleAddTask = () => {
     setTodolistitem([...Todolistitem, inputvalue])
-    setinputvalue("")
+    inputRef.current.value=""
   }
 
   
   const handleRemove=(value,itemid)=>{
    const removeid = Todolistitem.filter((item,index)=> index !==itemid )
    setTodolistitem(removeid)
-   
   }
-  console.log(Todolistitem)
+
+
+  const editTodotask=(editItemIndex)=>{
+  let tempStore=[...Todolistitem]
+   let tempelement= {...tempStore[editItemIndex]}
+   tempelement.isEdit=tempelement.isEdit=true
+   tempStore[editItemIndex]=tempelement
+   setTodolistitem(tempStore)
+   setEditIndex(editItemIndex)
+  }
+
   
-  
+  const handleUpdate=(index)=>{
+    let tempStore=[...Todolistitem] 
+    let tempElement= {...tempStore[index]}
+    // let secondTempElement={...tempStore[index]}
+    tempElement.title=updateTitle
+    tempElement.isEdit=false
+    tempStore[index]=tempElement   
+    setTodolistitem(tempStore)
+  }
+
 
   return (
     <div className="Todolist-main">
-      <div className="Todolist-Heading">
-        <p>Todolist</p>
+      <div className="Todoapp-heading">
+        <h1>Todo App</h1>
       </div>
-
-      <hr className="hrline"></hr>
+      <div className='inputbox-addbutton'>
       <input
-        className="todolist-input"
+        className="todolist-inputbox"
+         
+        
         onChange={(e) => {
-          setinputvalue(e.target.value);
+          setinputvalue({
+            title:e.target.value,
+            isEdit:false,
+            taskComplete:false,
+          });
         }}
+        ref={inputRef}
         type="text"
-      ></input>
-      <button
-        className="Handleinput"
+        ></input> 
+
+      <button 
+        className="taskAddbButton"
         onClick={() => {
-          Handletaddtask();
+          handleAddTask();
         }}
-      >
-        Add Task
+        >
+        Add Todo
       </button>
+      
+      </div>
+        <hr></hr>
 
       <div className="Todolist-items-Show">
-        <ol>
-          {Todolistitem.map((item,index) => {
-            return (<div className="Todolist-item">
-                <li key={index}>{item}</li>
-                    <button className="remove-button" onClick={()=>{ handleRemove(item,index)}}>Remove</button>
-            </div>)
+         <ol>
+          {
             
-          })}
-        </ol>
+            getData.map((item,index)=>{
+             if (!item.isEdit) {
+              return <div className="Todolist-itemshow cards">
+              <li> 
+                <div className="titleDiv">  
+                <p className="titlepera">{item.title}</p>
+                </div>
+                <div className="removeEditButton">
+              <button className="remove-button" type="text"  onClick={()=>{ handleRemove(item,index)}}>Remove</button>
+              <button className="edit-button" onClick={()=>{editTodotask(index)}}>Edit</button>
+              <button className="taskcomplete" onClick={()=>{editTodotask(index)}}>Task</button>
+              </div>
+
+              </li>
+               </div>
+             }
+
+               else{
+                return <div className="edit-div   ">
+                  <input className="updateValueInputBox" type="text"  onChange={(e)=>{setUpdateTitle(e.target.value)}}></input>
+                  <button className="updatebutton"  onClick={()=>{handleUpdate(index)}} >update</button>
+                </div>
+                  }
+                
+          })
+         }
+        </ol> 
       </div>
     </div>
   );
-}
-
+        }
 export default Todolist;
+ 
