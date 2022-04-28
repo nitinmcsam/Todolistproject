@@ -8,42 +8,53 @@ function Todolist() {
   const[count,setCount]=useState(1)
   const [Todolistitem, setTodolistitem] = useState([]);
   const [updateTitle,setUpdateTitle]=useState("")
-  const [getData,setGetData]=useState([])
+  const [getStatus,SetGetStatus]=useState()
+  
+
   const [inputvalue, setinputvalue] = useState({ 
       title:"",
       isEdit:false,
-      taskComplete:false,}
+      taskComplete:false,}  
       );
-      
+
+  
       useEffect(()=>{
         
          if(Todolistitem[editIndex]){
        if(Todolistitem[editIndex].isEdit==true){
         
          setCount(count+1)
-         console.log(count)
+         
        }
        }
        
       },[Todolistitem])
-
-      useEffect( ()=>{
-       async function fetchApi(){
-         let url = 'https://mocki.io/v1/38a904ec-6754-4052-b396-6466f0b249b0'
-         let respones=await fetch(url)
-         let datafine=await respones.json()
-         setGetData(datafine.data)
+      
+      async function fetchApi(){
          
-       }
+        const respones=await fetch('https://mocki.io/v1/3451ee6d-6010-499e-b610-820ef160276a')
+        const fineData= await respones.json()
+        let {status,data}=fineData
+        setTodolistitem(data)
+        SetGetStatus(status)
 
-       fetchApi()
-       console.log(getData)
-      },[getData])
+      }
+      
+      console.log(getStatus)
+      useEffect( ()=>{
+     
+        console.log(Todolistitem)
+        // setTodolistitem([...Todolistitem,getData])
+       
+  fetchApi()
+      },[])
+
 
   const handleAddTask = () => {
     setTodolistitem([...Todolistitem, inputvalue])
     inputRef.current.value=""
   }
+  // console.log( ...getData )s
 
   
   const handleRemove=(value,itemid)=>{
@@ -79,7 +90,8 @@ function Todolist() {
         <h1>Todo App</h1>
       </div>
       <div className='inputbox-addbutton'>
-      <input
+
+       <input
         className="todolist-inputbox"
          
         
@@ -91,8 +103,8 @@ function Todolist() {
           });
         }}
         ref={inputRef}
-        type="text"
-        ></input> 
+      ></input>  
+        
 
       <button 
         className="taskAddbButton"
@@ -103,16 +115,19 @@ function Todolist() {
         Add Todo
       </button>
       
+      
       </div>
         <hr></hr>
 
       <div className="Todolist-items-Show">
-         <ol>
+      <ol>
           {
             
-            getData.map((item,index)=>{
+            Todolistitem.map((item,index)=>{
+              if(getStatus){
              if (!item.isEdit) {
-              return <div className="Todolist-itemshow cards">
+              
+                return <div className="Todolist-itemshow cards">
               <li> 
                 <div className="titleDiv">  
                 <p className="titlepera">{item.title}</p>
@@ -120,23 +135,27 @@ function Todolist() {
                 <div className="removeEditButton">
               <button className="remove-button" type="text"  onClick={()=>{ handleRemove(item,index)}}>Remove</button>
               <button className="edit-button" onClick={()=>{editTodotask(index)}}>Edit</button>
-              <button className="taskcomplete" onClick={()=>{editTodotask(index)}}>Task</button>
+              
               </div>
 
               </li>
                </div>
+              
              }
 
-               else{
+             else{
                 return <div className="edit-div   ">
                   <input className="updateValueInputBox" type="text"  onChange={(e)=>{setUpdateTitle(e.target.value)}}></input>
                   <button className="updatebutton"  onClick={()=>{handleUpdate(index)}} >update</button>
                 </div>
                   }
-                
+              }
+              else{
+                return <h1> status code is false not enable to show data</h1>
+              }
           })
-         }
-        </ol> 
+        }
+        </ol>        
       </div>
     </div>
   );
